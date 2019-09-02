@@ -1,3 +1,6 @@
 {
-    
+    "app": {
+        "scripts_location": "./scripts/",
+        "log_path": "./logs/"
+    }
 }
