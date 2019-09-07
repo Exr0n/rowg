@@ -8,7 +8,8 @@ var i = {
         fs: require('fs'),
         moment: require('moment')
     },
-    config: require('./config.json')
+    config: require('./config.json'),
+    path: __dirname + "/"
 };
 i.util = require(i.config.app.scripts_location + "utility.js")(i);
 i.app = i.deps.express();
