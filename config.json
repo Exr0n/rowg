@@ -2,6 +2,7 @@
     "app": {
         "scripts_location": "./scripts/",
         "pages_location": "pages/",
-        "log_path": "./logs/"
+        "log_path": "./logs/",
+	"url": "click.exr0n.com"
     }
 }
