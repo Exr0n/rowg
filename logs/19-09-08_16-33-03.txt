@@ -1,0 +1,24 @@
+
+19-09-08_16-33-14:
+    GET http://localhost/static/scripts/userinf.js
+    from ::1
+
+19-09-08_16-33-14:
+    GET http://localhost/static/scripts/main.css
+    from ::1
+
+19-09-08_16-33-14:
+    GET http://localhost/favicon.ico
+    from ::1
+
+19-09-08_16-34-56:
+    GET http://localhost/static/test
+    from ::1
+
+19-09-08_16-34-56:
+    GET http://localhost/static/main.css
+    from ::1
+
+19-09-08_16-34-56:
+    GET http://localhost/favicon.ico
+    from ::1

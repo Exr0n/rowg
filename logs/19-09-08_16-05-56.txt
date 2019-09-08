@@ -1,0 +1,24 @@
+
+19-09-08_16-05-59:
+    GET http://localhost/
+    from ::1
+
+19-09-08_16-05-59:
+    GET http://localhost/static/main.css
+    from ::1
+
+19-09-08_16-05-59:
+    GET http://localhost/favicon.ico
+    from ::1
+
+19-09-08_16-06-04:
+    GET http://localhost/login
+    from ::1
+
+19-09-08_16-06-04:
+    GET http://localhost/static/main.css
+    from ::1
+
+19-09-08_16-06-04:
+    GET http://localhost/favicon.ico
+    from ::1

@@ -27,7 +27,8 @@ for (let mw in mws) {
 /* routing */
 var routes = require(i.config.app.scripts_location + 'routes.js')(i);
 for (var r in routes) {
-    i.app.use(r, routes[r]);
+    i.app.get( r, routes[r][0] || ((req, res) => {req.next()}));
+    i.app.post(r, routes[r][1] || ((req, res) => {req.next()}));
 }
 
 i.app.use((req, res) => {res.sendFile(i.path + i.config.app.pages_location + "not_found.html")});

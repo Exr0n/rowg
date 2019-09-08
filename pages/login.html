@@ -6,6 +6,7 @@
     <title>rowg - Home</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='static/main.css'>
+    <script src='static/scripts/userinf.js'></script>
 
     <!-- Google Sign In (https://developers.google.com/identity/sign-in/web/) -->
     <meta name="google-signin-scope" content="profile email">
@@ -32,16 +33,21 @@
             var id_token = googleUser.getAuthResponse().id_token;
             let x = new XMLHttpRequest();
             x.onreadystatechange = () => {
-                if (x.readyState == 4 && x.status == 200) 
+                if (x.readyState == 4) 
                 {
-                    window.location.replace("/");
+                    switch (x.status) {
+                        case 200:
+                            window.location.replace("/");
+                            break;
+                        case 1001:
+                            alert("Something went wrong, please try again!");
+                            break;
+                    }
                 }
             }
-            console.log('b0');
             x.open("POST", "/api/login", true);
-            console.log('b1');
-            x.send(JSON.stringify({email: profile.getEmail(), token: id_token}));
-            console.log('b2');
+            var data = JSON.stringify({email: profile.getEmail(), token: id_token});
+            x.send(data);
         }
     </script>
 </body>

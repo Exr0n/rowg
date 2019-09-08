@@ -1,0 +1,68 @@
+
+19-09-08_16-13-25:
+    GET http://localhost/login
+    from ::1
+
+19-09-08_16-13-25:
+    GET http://localhost/static/main.css
+    from ::1
+
+19-09-08_16-13-25:
+    GET http://localhost/favicon.ico
+    from ::1
+
+19-09-08_16-13-33:
+    POST http://localhost/api/login
+    from ::1
+
+19-09-08_16-13-33:
+    GET http://localhost/
+    from ::1
+
+19-09-08_16-13-33:
+    GET http://localhost/static/main.css
+    from ::1
+
+19-09-08_16-13-33:
+    GET http://localhost/favicon.ico
+    from ::1
+
+19-09-08_16-13-56:
+    GET http://localhost/
+    from ::1
+
+19-09-08_16-13-56:
+    GET http://localhost/static/main.css
+    from ::1
+
+19-09-08_16-13-56:
+    GET http://localhost/favicon.ico
+    from ::1
+
+19-09-08_16-14-02:
+    GET http://localhost/login
+    from ::1
+
+19-09-08_16-14-02:
+    GET http://localhost/static/main.css
+    from ::1
+
+19-09-08_16-14-02:
+    GET http://localhost/favicon.ico
+    from ::1
+
+19-09-08_16-14-13:
+    POST http://localhost/api/login
+    from ::1
+
+19-09-08_16-14-13:
+    GET http://localhost/
+    from ::1
+
+19-09-08_16-14-13:
+    GET http://localhost/static/main.css
+    from ::1
+
+19-09-08_16-14-13:
+    GET http://localhost/favicon.ico
+    from ::1
