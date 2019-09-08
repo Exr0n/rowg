@@ -11,8 +11,8 @@ ${ref.util.timestamp()}:
             req.next();
         },
 	require_secure: (req, res) => {
-		if (! req.secure) res.redirect(301, 'https://' + req.headers.host + req.url);
+		if (ref.app.servers.https && ! req.secure) res.redirect(301, 'https://' + req.headers.host + req.url);
 		else req.next();
-	}
-    }
-}
+	    }
+    };
+};
