@@ -6,9 +6,43 @@
     <title>rowg - Home</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='static/main.css'>
+
+    <!-- Google Sign In (https://developers.google.com/identity/sign-in/web/) -->
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id"
+        content="34644688959-6qg3v3t176dptohkrl7222ibt9o36erm.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <!-- end Google Sign In block -->
 </head>
 <body>
     <h3>Please log in!</h3>
-    
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+    <script>
+        function onSignIn(googleUser) {
+            // Useful data for your client-side scripts:
+            var profile = googleUser.getBasicProfile();
+            console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+            console.log('Full Name: ' + profile.getName());
+            console.log('Given Name: ' + profile.getGivenName());
+            console.log('Family Name: ' + profile.getFamilyName());
+            console.log("Image URL: " + profile.getImageUrl());
+            console.log("Email: " + profile.getEmail());
+
+            // The ID token you need to pass to your backend:
+            var id_token = googleUser.getAuthResponse().id_token;
+            let x = new XMLHttpRequest();
+            x.onreadystatechange = () => {
+                if (x.readyState == 4 && x.status == 200) 
+                {
+                    window.location.replace("/");
+                }
+            }
+            console.log('b0');
+            x.open("POST", "/api/login", true);
+            console.log('b1');
+            x.send(JSON.stringify({email: profile.getEmail(), token: id_token}));
+            console.log('b2');
+        }
+    </script>
 </body>
 </html>

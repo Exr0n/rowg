@@ -30,6 +30,7 @@ for (var r in routes) {
     i.app.use(r, routes[r]);
 }
 
+i.app.use((req, res) => {res.sendFile(i.path + i.config.app.pages_location + "not_found.html")});
 
 /* listen */
 i.app.servers = {

@@ -1,0 +1,36 @@
+
+19-09-08_15-34-34:
+    GET http://localhost/login
+    from ::1
+
+19-09-08_15-34-34:
+    GET http://localhost/static/main.css
+    from ::1
+
+19-09-08_15-34-34:
+    GET http://localhost/favicon.ico
+    from ::1
+
+19-09-08_15-34-37:
+    GET http://localhost/
+    from ::1
+
+19-09-08_15-34-37:
+    GET http://localhost/static/main.css
+    from ::1
+
+19-09-08_15-34-37:
+    GET http://localhost/favicon.ico
+    from ::1
+
+19-09-08_15-34-59:
+    GET http://localhost/santoehuasoentuh
+    from ::1
+
+19-09-08_15-34-59:
+    GET http://localhost/static/main.css
+    from ::1
+
+19-09-08_15-34-59:
+    GET http://localhost/favicon.ico
+    from ::1
