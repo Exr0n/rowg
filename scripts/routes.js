@@ -31,7 +31,5 @@ module.exports = (ref) => {
         ret[p] = [(req, res) => { return res.sendFile(ref.path + ref.config.app.pages_location + page_routes[p]); }, noop]
     }
 
-    console.log(ret);
-
     return ret;
 };
