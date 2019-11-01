@@ -25,7 +25,18 @@ module.exports = (ref) => {
                         res.end(1001);
                     }
                 });
-            }]
+            }],
+        "/api/googleoauthcallback": [
+            (req, res) => {
+                let code;
+                if (/googleoauthcallback\?code=/.test(req.url)) {
+                    code = req.url.substr(req.url.find("?code=")+6);
+                    console.log("code from oauth callback: ", code);
+                    const {tokens} = oauth2Client.getToken(code);
+                    console.log(tokens);
+                }
+            }
+        ]
     };
 
     for (let p in page_routes) {
