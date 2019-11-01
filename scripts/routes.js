@@ -2,7 +2,8 @@
 
 let page_routes = {
     "/": "index.html",
-    "/login": "login.html"
+    "/login": "login.html",
+    "/dashboard": "dashboard.html"
 }
 
 module.exports = (ref) => {
