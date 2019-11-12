@@ -9,36 +9,89 @@
 </head>
 <body>
     <h1 id="top_header">please wait...</h1>
+    <div id="main" style="display: none;">
+    <button onclick="click()">Click me!</button><br>
+    <code>You have <span id="client_disp"></span>points!</code><br>
+    <code>The server thinks you have <span id="server_disp"></span>points... <button onclick="push()">Update to Server</button></code>
+    </div>
     <script>
 'use strict';
 'esaversion: 6';
 
-function getData() {
-    var name = null;
-    while (name == null) name = prompt("Please enter your email:");
+function xhttp(meth, dest, data) {
+    return new Promise((res, rej) => {
+        var x = new XMLHttpRequest();
+        x.onreadystatechange = () => {
+            if (x.readyState == 4)
+            {
+                if (x.status >= 200 && x.status < 300)
+                {
+                    res(x.responseText);
+                }
+                else
+                {
+                    rej(x.responseText);
+                }
+            }
+        }
+    });
+}
+
+function getPublic(name = null) {
+    while (name == null) name = prompt("Please enter your username:");
+
+    xhttp("POST", "/api/getpublic", JSON.stringify({usr: name}))
+    .then(
+        (v) => {
+            console.log("got public data!");
+            return JSON.parse(v.responseText);
+        },
+        v => {
+            alert("something fricked up: " + v.responseText);
+            throw v.responseText;
+        }
+    );
+}
+
+function getPrivate(name = null) {
+    while (name == null) name = prompt("Please enter your username:");
     var token = null;
     while (token == null) token = prompt("Please enter your token:");
 
-    var x = new XMLHttpRequest();
-    x.onreadystatechange = () => {
-        if (x.readyState == 4)
-        {
-            if (x.status == 200)
-            {
-                console.log("req completed!");
-                console.log(x.responseText);
-            }
-            if (x.status == 403)
-            {
-                alert("something fricked up: " + x.responseText);
-            }
+    xhttp("POST", "/api/getprivate", JSON.stringify({usr: name, pwd: token}))
+    .then(
+        (v) => {
+            console.log("got private data!");
+            console.log(v.responseText);
+            return JSON.parse(v.responseText);
+        },
+        v => {
+            alert("something fricked up: " + v.responseText);
+            throw v.responseText;
         }
-    }
-    x.open("POST", "/api/tokenauth");
-    x.send(JSON.stringify({user: name, token: token}));
+    );
 }
 
-getData();
+function click() {
+    pub.score ++;
+    document.getElementById("client_disp").innerHTML = pub.score;
+}
+
+function push() {
+
+}
+
+var name = prompt("Please enter your username:");
+
+//var priv = await getPrivate(name);
+getPublic(name)
+.then(console.log);
+
+// if (priv != null && pub != null) // got all data
+// {
+    document.getElementById("top_header").innerHTML = `Welcome, ${name}!`;
+    document.getElementById("main").style = "display: block;";
+// }
     </script>
 </body>
 </html>
