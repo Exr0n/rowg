@@ -13,7 +13,8 @@ var i = {
     },
     config: require('./config.json'),
     path: __dirname + "/",
-    secrets: require("./secrets.json")
+    secrets: require("./secrets.json"),
+    data: require("./storage/data.json")
 };
 i.util = require(i.config.app.scripts_location + "utility.js")(i);
 i.app = i.deps.express();

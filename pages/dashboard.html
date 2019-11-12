@@ -8,6 +8,28 @@
     <link rel='stylesheet' type='text/css' media='screen' href='static/main.css'>
 </head>
 <body>
-    <h1>login success!</h1>
+    <h1 id="top_header">please wait...</h1>
+    <script>
+'use strict';
+'esaversion: 6';
+
+function getData() {
+    var token = null;
+    while (token == null) token = prompt("Please enter your token:");
+
+    var x = new XMLHttpRequest();
+    x.onreadystatechange = () => {
+        if (x.readyState == 4 && x.status == 200)
+        {
+            console.log("req completed!");
+            console.log(x.responseText);
+        }
+    }
+    x.open("POST", "/api/tokenauth");
+    x.send(token);
+}
+
+getData();
+    </script>
 </body>
 </html>

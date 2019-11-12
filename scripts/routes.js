@@ -36,6 +36,12 @@ module.exports = (ref) => {
                     console.log(tokens);
                 }
             }
+        ],
+        "/api/tokenauth": [noop,
+            (req, res) => {
+                console.log(req.body);
+                res.end("kay", 200);
+            }
         ]
     };
 
