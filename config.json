@@ -3,6 +3,7 @@
         "scripts_location": "./scripts/",
         "pages_location": "pages/",
         "log_path": "./logs/",
+        "bcrypt_sr": 14
+    },
 	"url": "click.exr0n.com"
-    }
 }

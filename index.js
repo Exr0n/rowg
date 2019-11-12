@@ -9,7 +9,8 @@ var i = {
         fs: require('fs'),
         moment: require('moment'),
         http: require('http'),
-        https: require('https')
+        https: require('https'),
+        bcrypt: require('bcrypt')
     },
     config: require('./config.json'),
     path: __dirname + "/",

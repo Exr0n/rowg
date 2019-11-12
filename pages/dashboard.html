@@ -14,19 +14,28 @@
 'esaversion: 6';
 
 function getData() {
+    var name = null;
+    while (name == null) name = prompt("Please enter your email:");
     var token = null;
     while (token == null) token = prompt("Please enter your token:");
 
     var x = new XMLHttpRequest();
     x.onreadystatechange = () => {
-        if (x.readyState == 4 && x.status == 200)
+        if (x.readyState == 4)
         {
-            console.log("req completed!");
-            console.log(x.responseText);
+            if (x.status == 200)
+            {
+                console.log("req completed!");
+                console.log(x.responseText);
+            }
+            if (x.status == 403)
+            {
+                alert("something fricked up: " + x.responseText);
+            }
         }
     }
     x.open("POST", "/api/tokenauth");
-    x.send(token);
+    x.send(JSON.stringify({user: name, token: token}));
 }
 
 getData();
