@@ -1,2 +1,4 @@
 secret*
 logs/*
+storage/data*
+.gitignore
