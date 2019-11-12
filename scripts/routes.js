@@ -1,3 +1,4 @@
+'esversion: 6';
 'use strict';
 
 let page_routes = {
