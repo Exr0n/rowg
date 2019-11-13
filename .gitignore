@@ -1,4 +1,4 @@
 secret*
 logs/*
-storage/data*
+storage/*
 node_modules/*
