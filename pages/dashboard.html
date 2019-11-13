@@ -8,108 +8,126 @@
     <link rel='stylesheet' type='text/css' media='screen' href='static/main.css'>
 </head>
 <body>
+    <script>
+        'use strict';
+        'esaversion: 6';
+
+        function xhttp(meth, dest, data) {
+            return new Promise((res, rej) => {
+                var x = new XMLHttpRequest();
+                x.onreadystatechange = () => {
+                    if (x.readyState == 4) {
+                        if (x.status >= 200 && x.status < 300) {
+                            res(x.responseText);
+                        } else {
+                            rej(x.responseText);
+                        }
+                    }
+                }
+                x.open(meth, dest);
+                x.send(data);
+            });
+        }
+
+        function getPublic(name = null) {
+            while (name == null) name = prompt("Please enter your username:");
+
+            return new Promise((res, rej) => {
+                xhttp("POST", "/api/getpublic", JSON.stringify({
+                        usr: name
+                    }))
+                    .then(
+                        (v) => {
+                            console.log("got public data!");
+                            res(JSON.parse(v));
+                        },
+                        (v) => {
+                            alert("something fricked up: " + v);
+                            rej(v);
+                        }
+                    );
+            });
+        }
+
+        function getPrivate(name = null) {
+            while (name == null) name = prompt("Please enter your username:");
+            var token = null;
+            while (token == null) token = prompt("Please enter your token:");
+
+            return new Promise((res, rej) => {
+                xhttp("POST", "/api/getprivate", JSON.stringify({
+                        usr: name,
+                        pwd: token
+                    }))
+                    .then(
+                        (v) => {
+                            console.log("got private data!");
+                            res(JSON.parse(v));
+                        },
+                        v => {
+                            alert("something fricked up: " + v);
+                            rej(v);
+                        }
+                    );
+            });
+        }
+
+        var score = 0;
+        update();
+
+        async function update() {
+            document.getElementById("client_disp").innerHTML = score;
+            document.getElementById("server_disp").innerHTML = i.pub ? i.pub.score : "hmmm"; // ntfs: this could be redundant 
+        }
+
+        function click() {
+            console.log("click!")
+            score++;
+            update();
+        }
+
+        function push() {
+            xhttp("POST", "/api/play/pushscore", i.pub.score - score).then(update, console.error);
+        }
+
+        var i = {pub: null, priv: null};
+
+        window.onload = () => {
+            let pub = null;
+            let priv = null;
+
+            document.getElementById("clicker").addEventListener('click', click);
+
+            var name = prompt("Please enter your username:");
+
+            //var priv = await getPrivate(name);
+            Promise.all([getPublic(name), getPrivate(name)])
+                .then(
+                    ([pub, priv]) => {
+                    if (pub == null || priv == null) alert("Whoops! Something went wrong... try reloading?");
+                    
+                    i.pub = pub;
+                    i.priv = priv;
+                    score = i.pub.score;
+
+                    // set display to visable
+                    document.getElementById("top_header").innerHTML = `Welcome, ${name}!`;
+                    document.getElementById("main").style = "display: block;";
+
+                    update();
+                    }, 
+                    (e) => {
+                        document.getElementById("top_header").innerHTML = "Something fricked up, try reloading...";
+                    }
+                );
+        }
+    </script>
     <h1 id="top_header">please wait...</h1>
     <div id="main" style="display: none;">
-    <button onclick="click">Click me!</button><br>
+    <button id="clicker">Click me!</button><br>
     <code>You have <span id="client_disp"></span> points!</code><br>
-    <code>The server thinks you have <span id="server_disp"></span> points... <button onclick="push">Update Server</button></code>
+    <code>The server thinks you have <span id="server_disp"></span> points... <button style="display: none;">Update Server</button></code>
     </div>
-    <script>
-'use strict';
-'esaversion: 6';
-
-function xhttp(meth, dest, data) {
-    return new Promise((res, rej) => {
-        var x = new XMLHttpRequest();
-        x.onreadystatechange = () => {
-            if (x.readyState == 4)
-            {
-                console.log("xhttp response: " + x.responseText);
-                if (x.status >= 200 && x.status < 300)
-                {
-                    res(x.responseText);
-                }
-                else
-                {
-                    rej(x.responseText);
-                }
-            }
-        }
-        x.open(meth, dest);
-        x.send(data);
-    });
-}
-
-function getPublic(name = null) {
-    while (name == null) name = prompt("Please enter your username:");
     
-    return new Promise((res, rej) => {
-        xhttp("POST", "/api/getpublic", JSON.stringify({usr: name}))
-        .then(
-            (v) => {
-                console.log("got public data!");
-                res(JSON.parse(v));
-            },
-            (v) => {
-                alert("something fricked up: " + v);
-                rej(v);
-            }
-        );
-    });
-}
-
-function getPrivate(name = null) {
-    while (name == null) name = prompt("Please enter your username:");
-    var token = null;
-    while (token == null) token = prompt("Please enter your token:");
-
-    return new Promise((res, rej) => {
-        xhttp("POST", "/api/getprivate", JSON.stringify({usr: name, pwd: token}))
-        .then(
-            (v) => {
-                console.log("got private data!");
-                res(JSON.parse(v));
-            },
-            v => {
-                alert("something fricked up: " + v);
-                rej(v);
-            }
-        );
-    });
-}
-
-var score = 0;
-update();
-
-async function update() {
-    document.getElementById("client_disp").innerHTML = score;
-    document.getElementById("server_disp").innerHTML = pub ? pub.score : 0; // ntfs: this could be redundant 
-}
-
-async function click() {
-    console.log("click!")
-    score ++;
-    update();
-}
-
-function push() {
-    xhttp("POST", "/api/score/inc", pub.score - score).then(update, console.error);
-}
-
-var name = prompt("Please enter your username:");
-var pub = null, priv = null;
-
-//var priv = await getPrivate(name);
-Promise.all([getPublic(name), getPrivate(name)])
-.then(([pub, priv]) => {
-    if (pub == null || priv == null) alert("Whoops! Something went wrong... try reloading?");
-
-    score = pub.score;
-
-    // set display to visable
-    document.getElementById("top_header").innerHTML = `Welcome, ${name}!`;
-    document.getElementById("main").style = "display: block;";
-});
-    </script>
 </body>
 </html>

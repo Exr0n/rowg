@@ -41,14 +41,14 @@ module.exports = (ref) => {
             (req, res) => {
                 req.body = JSON.parse(req.body);
                 // pwd for $2b$14$3xzYQBfhdN0EPHYdM2/u7.oUISDHAMDa9RPTT48fqsuQJIdMA0cu2 is johny
-                if (! ref.data.hasOwnProperty(req.body.usr)) return res.status(403).send("wrong_user");
-                ref.deps.bcrypt.compare(req.body.pwd, ref.data[req.body.usr].meta.pwd)
+                ref.util.authenticate(req.body)
                     .then(r => {
+                        console.log("authenticate finished")
                         if (r) res.end(JSON.stringify(ref.data[req.body.usr].private)); // todo: get data from database and return the json.stringify
                         else { res.status(403).send("wrong_pass"); }
                         return;
                     }).catch(e => {
-                    res.send("whoops", 403);
+                    res.status(403).send("whoops");
                 });
                 
             }
@@ -58,6 +58,17 @@ module.exports = (ref) => {
                 req.body = JSON.parse(req.body);
                 if (! ref.data.hasOwnProperty(req.body.usr)) return res.status(403).send("wrong_user");
                 res.end(JSON.stringify(ref.data[req.body.usr].public));
+            }
+        ],
+        "/api/play/pushscore": [noop,
+            (req, res) => {
+                req.body = JSON.parse(req.body);
+                if (req.body.amnt > ref.config.play.click.max)
+                {
+                    req.body.amnt *= -1;
+                    res.status(400).end();
+                }
+                
             }
         ]
     };

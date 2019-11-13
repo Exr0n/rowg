@@ -5,5 +5,10 @@
         "log_path": "./logs/",
         "bcrypt_sr": 14
     },
+    "play": {
+        "click": {
+            "max": 1000
+        }
+    },
 	"url": "click.exr0n.com"
 }
