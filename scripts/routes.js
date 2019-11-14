@@ -42,15 +42,16 @@ module.exports = (ref) => {
                 req.body = JSON.parse(req.body);
                 // pwd for $2b$14$3xzYQBfhdN0EPHYdM2/u7.oUISDHAMDa9RPTT48fqsuQJIdMA0cu2 is johny
                 ref.util.authenticate(req.body)
-                    .then(r => {
-                        console.log("authenticate finished")
+                .then((r) => {
+                    return new Promise((rs, rj) => {
+                        console.log("authenticate finished: " + r);
                         if (r) res.end(JSON.stringify(ref.data[req.body.usr].private)); // todo: get data from database and return the json.stringify
-                        else { res.status(403).send("wrong_pass"); }
-                        return;
-                    }).catch(e => {
-                    res.status(403).send("whoops");
-                });
-                
+                        else {
+                            res.status(403).send("wrong_pass");
+                        }
+                        rs(r);
+                    });
+                }).catch(v => {res.status(403).end(); console.error(v); return Promise.resolve()});
             }
         ],
         "/api/getpublic": [noop,

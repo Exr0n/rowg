@@ -14,7 +14,7 @@ module.exports = (ref) => {
             console.log(text);
         },
         user_exists: name => ref.data.hasOwnProperty(name),
-        authenticate: data => {
+        authenticate: (data) => {
             console.log("utility.js->aunthenticate:\n" + JSON.stringify(data, (k, v) => v, 2));
             return new Promise((res, rej) => {
                 if (! data) rej("wrong_input");
@@ -22,9 +22,10 @@ module.exports = (ref) => {
                 if (ret.user_exists(data.usr))
                 {
                     console.log("user exists!");
-                    ref.deps.bcrypt.compare(data.pwd, ref.data[data.usr].meta.pwd).then(res, rej);
+                    ref.deps.bcrypt.compare(data.pwd, ref.data[data.usr].meta.pwd).then((v) => { console.log("yay!: " + v); res(v) }, rej);
+                } else {
+                    rej("authentication whoops");
                 }
-                rej("wrong_name");
             });
         }
     };
