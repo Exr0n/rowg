@@ -3,6 +3,13 @@
         "scripts_location": "./scripts/",
         "pages_location": "pages/",
         "log_path": "./logs/",
+        "bcrypt_sr": 14,
+        "save_interval": 15
+    },
+    "play": {
+        "click": {
+            "max": 1000
+        }
+    },
 	"url": "click.exr0n.com"
-    }
 }

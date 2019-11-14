@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>rowg - Home</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='static/main.css'>
+</head>
+<body>
+    <script>
+        'use strict';
+        'esaversion: 6';
+
+        function xhttp(meth, dest, data) {
+            return new Promise((res, rej) => {
+                var x = new XMLHttpRequest();
+                x.onreadystatechange = () => {
+                    if (x.readyState == 4) {
+                        if (x.status >= 200 && x.status < 300) {
+                            res(x.responseText);
+                        } else {
+                            rej(x.responseText);
+                        }
+                    }
+                }
+                x.open(meth, dest);
+                x.send(data);
+            });
+        }
+
+        function getPublic(name = null) {
+            while (name == null) name = prompt("Please enter your username:");
+
+            return new Promise((res, rej) => {
+                xhttp("POST", "/api/getpublic", JSON.stringify({
+                        usr: name
+                    }))
+                    .then(
+                        (v) => {
+                            console.log("got public data!");
+                            res(JSON.parse(v));
+                        },
+                        (v) => {
+                            alert("something fricked up: " + v);
+                            rej(v);
+                        }
+                    );
+            });
+        }
+
+        function getPrivate(name = null) {
+            while (name == null) name = prompt("Please enter your username:");
+            var token = null;
+            while (token == null) token = prompt("Please enter your token:");
+
+            return new Promise((res, rej) => {
+                xhttp("POST", "/api/getprivate", JSON.stringify({
+                        usr: name,
+                        pwd: token
+                    }))
+                    .then(
+                        (v) => {
+                            console.log("got private data!");
+                            res(JSON.parse(v));
+                        },
+                        v => {
+                            alert("something fricked up: " + v);
+                            rej(v);
+                        }
+                    );
+            });
+        }
+
+        var score = 0;
+        update();
+
+        async function update() {
+            document.getElementById("client_disp").innerHTML = score;
+            document.getElementById("server_disp").innerHTML = i.pub ? i.pub.score : "hmmm"; // ntfs: this could be redundant 
+        }
+
+        function click() {
+            score++;
+            if (score - i.pub.score > 15) push();
+            else update();
+        }
+
+        function push() {
+            xhttp("POST", "/api/play/pushscore", JSON.stringify({usr: i.name, tok: i.tok, amnt: score - i.pub.score}))
+            .then((r) => {
+                score = i.pub.score = JSON.parse(r);
+                update();
+            }, console.error);
+        }
+
+        var i = {pub: null, priv: null};
+
+        window.onload = () => {
+            let pub = null;
+            let priv = null;
+
+            document.getElementById("clicker").addEventListener('click', click);
+
+            i.name = prompt("Please enter your username:");
+            i.tok = "testtoken"; // todo: remove
+
+            //var priv = await getPrivate(name);
+            Promise.all([getPublic(i.name), getPrivate(i.name)])
+                .then(
+                    ([pub, priv]) => {
+                    if (pub == null || priv == null) alert("Whoops! Something went wrong... try reloading?");
+                    
+                    i.pub = pub;
+                    i.priv = priv;
+                    score = i.pub.score;
+
+                    // set display to visable
+                    document.getElementById("top_header").innerHTML = `Welcome, ${i.name}!`;
+                    document.getElementById("main").style = "display: block;";
+
+                    update();
+                    }, 
+                    (e) => {
+                        document.getElementById("top_header").innerHTML = "Something fricked up, try reloading...";
+                    }
+                );
+        }
+    </script>
+    <h1 id="top_header">please wait...</h1>
+    <div id="main" style="display: none;">
+    <button id="clicker">Click me!</button><br>
+    <code>You have <span id="client_disp"></span> points!</code><br>
+    <code>The server thinks you have <span id="server_disp"></span> points... <button style="display: none;">Update Server</button></code>
+    </div>
+    
+</body>
+</html>

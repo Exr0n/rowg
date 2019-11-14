@@ -14,6 +14,14 @@ ${ref.util.timestamp()}:
             if (ref.app.servers.https && ! req.secure) res.redirect(301, 'https://' + req.headers.host + req.url);
             else req.next();
         },
-        static: ref.deps.express.static("static")
+        static: ref.deps.express.static("static"),
+        body_parser: (req, res) => {
+            if (req.method == "POST")
+            {
+                let body = '';
+                req.on('data', (chunk) => body += chunk.toString());
+                req.on('end', () => {req.body = body; req.next();});
+            } else {req.next();}
+        }
     };
 };
