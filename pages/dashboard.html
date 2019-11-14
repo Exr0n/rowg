@@ -81,13 +81,18 @@
         }
 
         function click() {
-            console.log("click!")
             score++;
-            update();
+            if (score - i.pub.score > 16) push();
+            else update();
         }
 
         function push() {
-            xhttp("POST", "/api/play/pushscore", i.pub.score - score).then(update, console.error);
+            console.log("pushing changes to server");
+            xhttp("POST", "/api/play/pushscore", JSON.stringify({usr: i.name, tok: i.tok, amnt: i.pub.score - score}))
+            .then((r) => {
+                i.pub.score = score;
+                update();
+            }, console.error);
         }
 
         var i = {pub: null, priv: null};
@@ -98,10 +103,11 @@
 
             document.getElementById("clicker").addEventListener('click', click);
 
-            var name = prompt("Please enter your username:");
+            i.name = prompt("Please enter your username:");
+            i.tok = "testtoken"; // todo: remove
 
             //var priv = await getPrivate(name);
-            Promise.all([getPublic(name), getPrivate(name)])
+            Promise.all([getPublic(i.name), getPrivate(i.name)])
                 .then(
                     ([pub, priv]) => {
                     if (pub == null || priv == null) alert("Whoops! Something went wrong... try reloading?");
@@ -111,7 +117,7 @@
                     score = i.pub.score;
 
                     // set display to visable
-                    document.getElementById("top_header").innerHTML = `Welcome, ${name}!`;
+                    document.getElementById("top_header").innerHTML = `Welcome, ${i.name}!`;
                     document.getElementById("main").style = "display: block;";
 
                     update();

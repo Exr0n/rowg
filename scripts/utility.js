@@ -15,16 +15,24 @@ module.exports = (ref) => {
         },
         user_exists: name => ref.data.hasOwnProperty(name),
         authenticate: (data) => {
-            console.log("utility.js->aunthenticate:\n" + JSON.stringify(data, (k, v) => v, 2));
             return new Promise((res, rej) => {
                 if (! data) rej("wrong_input");
                 if (! data.usr || !data.pwd) rej("wrong_input");
                 if (ret.user_exists(data.usr))
                 {
-                    console.log("user exists!");
-                    ref.deps.bcrypt.compare(data.pwd, ref.data[data.usr].meta.pwd).then((v) => { console.log("yay!: " + v); res(v) }, rej);
+                    ref.deps.bcrypt.compare(data.pwd, ref.data[data.usr].meta.pwd).then((v) => { res(v) }, rej);
                 } else {
                     rej("authentication whoops");
+                }
+            });
+        },
+        check_session: (name, token) => {
+            return new Promise((rs, rj) => {
+                if (!ref.data.hasOwnProperty(name)) rj("wrong_input");
+                else if (!ref.sessions.hasOwnProperty(name)) rj("wrong_name");
+                else if (token != ref.sessions[name]) rj("wrong_token");
+                else {
+                    rs(true);
                 }
             });
         }

@@ -3,7 +3,8 @@
         "scripts_location": "./scripts/",
         "pages_location": "pages/",
         "log_path": "./logs/",
-        "bcrypt_sr": 14
+        "bcrypt_sr": 14,
+        "save_interval": 15
     },
     "play": {
         "click": {

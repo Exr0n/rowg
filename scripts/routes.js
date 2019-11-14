@@ -44,8 +44,7 @@ module.exports = (ref) => {
                 ref.util.authenticate(req.body)
                 .then((r) => {
                     return new Promise((rs, rj) => {
-                        console.log("authenticate finished: " + r);
-                        if (r) res.end(JSON.stringify(ref.data[req.body.usr].private)); // todo: get data from database and return the json.stringify
+                        if (r) res.end(JSON.stringify(ref.data[req.body.usr].private)); 
                         else {
                             res.status(403).send("wrong_pass");
                         }
@@ -64,12 +63,23 @@ module.exports = (ref) => {
         "/api/play/pushscore": [noop,
             (req, res) => {
                 req.body = JSON.parse(req.body);
-                if (req.body.amnt > ref.config.play.click.max)
-                {
-                    req.body.amnt *= -1;
-                    res.status(400).end();
-                }
-                
+                console.log(JSON.stringify(req.body));
+                ref.util.check_session(req.body.usr, req.body.tok)
+                .then(
+                    v => {
+                        console.log(v);
+                        if (req.body.amnt > ref.config.play.click.max) {
+                            req.body.amnt *= -1;
+                            res.status(400).end();
+                        }
+                        ref.data[req.body.usr].public.score += req.body.amnt;
+                        res.status(200).end();
+                    },
+                    v => {
+                        res.status(403).end(v.toString());
+                        return Promise.resolve();
+                    }
+                );
             }
         ]
     };
@@ -80,3 +90,20 @@ module.exports = (ref) => {
 
     return ret;
 };
+
+/*
+"/api/gettoken": [noop,
+    (req, res) => {
+        req.body = JSON.parse(req.body);
+        ref.util.authenticate(req.body)
+            .then(r => {
+                return new Promise((rs, rj) => {
+                    if (r) {
+                        ref.sessions[req.body.usr] = uuid();
+                        res.status(200).end(ref.sessions[req.body.usr]);
+                    }
+                });
+            });
+    }
+]
+*/

@@ -10,12 +10,14 @@ var i = {
         moment: require('moment'),
         http: require('http'),
         https: require('https'),
-        bcrypt: require('bcrypt')
+        bcrypt: require('bcrypt'),
+        uuid: require('uuid/v4')
     },
     config: require('./config.json'),
     path: __dirname + "/",
     secrets: require("./secrets.json"),
-    data: require("./storage/data.json")
+    data: require("./storage/data.json"),
+    sessions: {"dev": "testtoken"} // todo: remove the test token entry
 };
 i.util = require(i.config.app.scripts_location + "utility.js")(i);
 i.app = i.deps.express();
@@ -55,3 +57,7 @@ for (let key in i.app.servers)
 {
 	i.app.servers[key].listen(i.secrets.ports[key], () => { console.log(`Listening on port ${i.secrets.ports[key]}`); });
 }
+
+let dataWriteInterval = setInterval(() => {
+    fs.createWriteStream('./storage/data.json').write(JSON.stringify(i.data, (k, v)=>v, 2));
+}, i.config.app.save_interval*1000*60) // save_interval minutes
