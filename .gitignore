@@ -2,3 +2,4 @@ secret*
 logs/*
 storage/*
 node_modules/*
+storage
