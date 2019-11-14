@@ -37,6 +37,20 @@ module.exports = (ref) => {
                 }
             }
         ],
+        "/api/gettoken": [noop,
+            (req, res) => {
+                req.body = JSON.parse(req.body);
+                ref.util.authenticate(req.body)
+                    .then(r => {
+                        return new Promise((rs, rj) => {
+                            if (r) {
+                                ref.sessions[req.body.usr] = uuid();
+                                res.status(200).end(ref.sessions[req.body.usr]);
+                            }
+                        });
+                    });
+            }
+        ],
         "/api/getprivate": [noop,
             (req, res) => {
                 req.body = JSON.parse(req.body);
@@ -90,20 +104,3 @@ module.exports = (ref) => {
 
     return ret;
 };
-
-/*
-"/api/gettoken": [noop,
-    (req, res) => {
-        req.body = JSON.parse(req.body);
-        ref.util.authenticate(req.body)
-            .then(r => {
-                return new Promise((rs, rj) => {
-                    if (r) {
-                        ref.sessions[req.body.usr] = uuid();
-                        res.status(200).end(ref.sessions[req.body.usr]);
-                    }
-                });
-            });
-    }
-]
-*/

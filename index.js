@@ -59,5 +59,5 @@ for (let key in i.app.servers)
 }
 
 let dataWriteInterval = setInterval(() => {
-    fs.createWriteStream('./storage/data.json').write(JSON.stringify(i.data, (k, v)=>v, 2));
+    i.deps.fs.createWriteStream('./storage/data.json').write(JSON.stringify(i.data, (k, v)=>v, 2));
 }, i.config.app.save_interval*1000*60) // save_interval minutes
