@@ -82,15 +82,14 @@
 
         function click() {
             score++;
-            if (score - i.pub.score > 16) push();
+            if (score - i.pub.score > 15) push();
             else update();
         }
 
         function push() {
-            console.log("pushing changes to server");
-            xhttp("POST", "/api/play/pushscore", JSON.stringify({usr: i.name, tok: i.tok, amnt: i.pub.score - score}))
+            xhttp("POST", "/api/play/pushscore", JSON.stringify({usr: i.name, tok: i.tok, amnt: score - i.pub.score}))
             .then((r) => {
-                i.pub.score = score;
+                score = i.pub.score = JSON.parse(r);
                 update();
             }, console.error);
         }
