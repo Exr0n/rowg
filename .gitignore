@@ -3,3 +3,4 @@ logs/*
 storage/*
 node_modules/*
 storage
+storage*
