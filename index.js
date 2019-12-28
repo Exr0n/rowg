@@ -13,10 +13,20 @@ var i = {
     },
     config: require('./config.json'),
     path: __dirname + "/",
-    secrets: require("./secrets.json")
+    secrets: require("./secrets.json"),
+	production: false
 };
 i.util = require(i.config.app.scripts_location + "utility.js")(i);
 i.app = i.deps.express();
+
+/* url pickyness */
+i.app.use('*', (req, res) => {
+	if (i.production && req.hostname != i.config.app.url) {
+		// ignore
+	} else {
+		req.next();
+	}
+});
 
 /* middlewares */
 var mws = require(i.config.app.scripts_location + 'middlewares.js')(i);
@@ -40,16 +50,17 @@ i.app.servers = {
 
 try {
     let ssl_creds = {
-        key: i.deps.fs.readFileSync('/etc/letsencrypt/live/www.exr0n.com/privkey.pem', 'utf8'),
-        cert: i.deps.fs.readFileSync('/etc/letsencrypt/live/www.exr0n.com/cert.pem', 'utf8'),
-        ca: i.deps.fs.readFileSync('/etc/letsencrypt/live/www.exr0n.com/chain.pem', 'utf8')
+        key: i.deps.fs.readFileSync('/etc/letsencrypt/live/exr0n.com/privkey.pem', 'utf8'),
+        cert: i.deps.fs.readFileSync('/etc/letsencrypt/live/exr0n.com/cert.pem', 'utf8'),
+        ca: i.deps.fs.readFileSync('/etc/letsencrypt/live/exr0n.com/chain.pem', 'utf8')
     };
     i.app.servers.https = i.deps.https.createServer(ssl_creds, i.app);
+	i.production = true;
 } catch (e) {
     console.error(e);
 }
 
 for (let key in i.app.servers)
 {
-	i.app.servers[key].listen(i.secrets.ports[key], () => { console.log(`Listening on port ${i.secrets.ports[key]}`); });
+	i.app.servers[key].listen(i.secrets.ports[key], () => { console.log(`Listening on port ${i.secrets.ports[key]} at ${Date()}`); });
 }
